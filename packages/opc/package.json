@@ -1,0 +1,29 @@
+{
+  "name": "@pulse/opc",
+  "version": "0.0.1",
+  "description": "open peer channel 基于PostMessage的对象和方法的双向通讯库",
+  "main": "index.js",
+  "keywords": [
+    "postMessage",
+    "iframe",
+    "channel"
+  ],
+  "scripts": {
+    "build": "vite build --debug"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2",
+    "vite": "^6.2.1",
+    "vite-plugin-dts": "^4.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WangMingHua111/pulse-monorepo.git"
+  },
+  "author": "wangminghua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WangMingHua111/pulse-monorepo/issues"
+  },
+  "homepage": "https://github.com/WangMingHua111/pulse-monorepo#readme"
+}

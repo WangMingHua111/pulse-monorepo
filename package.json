@@ -1,0 +1,24 @@
+{
+  "name": "pulse-monorepo",
+  "version": "0.0.1",
+  "description": "快速、轻量、提升生产力的效率工具",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WangMingHua111/pulse-monorepo.git"
+  },
+  "author": "wangminghua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WangMingHua111/pulse-monorepo/issues"
+  },
+  "homepage": "https://github.com/WangMingHua111/pulse-monorepo#readme",
+  "devDependencies": {
+    "rimraf": "^6.0.1"
+  }
+}
