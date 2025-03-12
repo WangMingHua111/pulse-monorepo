@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/WangMingHua111/pulse-monorepo/issues"
   },
-  "homepage": "https://github.com/WangMingHua111/pulse-monorepo#readme"
+  "homepage": "https://github.com/WangMingHua111/pulse-monorepo#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
