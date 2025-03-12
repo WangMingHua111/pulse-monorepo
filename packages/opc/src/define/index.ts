@@ -7,6 +7,10 @@ export type CancelFn = () => void
  */
 export interface IChannel {
   /**
+   * 销毁对象
+   */
+  destroy(): void
+  /**
    * 返回客户端记数数量（暂未实现）
    */
   count(): number

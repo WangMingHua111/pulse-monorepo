@@ -42,6 +42,7 @@ type OpenPeerChannelOptions = {
   log?: boolean
 }
 class OpenPeerChannel implements IChannel {
+  private isDestroy = false
   private no = 1
   private calls = new Map<
     number,
@@ -93,6 +94,11 @@ class OpenPeerChannel implements IChannel {
 
     this.channel = channel
   }
+  destroy(): void {
+    if (this.isDestroy) return
+    this.channel.close()
+    this.isDestroy = true
+  }
 
   count(): number {
     throw new Error('Method not implemented.')
@@ -112,7 +118,7 @@ class OpenPeerChannel implements IChannel {
 
     return this
   }
-  push(data: any, type?: string): void {
+  push(data: any, type: string = '*'): void {
     this._send(
       {
         no: this.no++,
