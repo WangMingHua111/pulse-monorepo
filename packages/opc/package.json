@@ -9,12 +9,14 @@
     "channel"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "release": "npx release-it patch"
   },
   "devDependencies": {
     "typescript": "~5.7.2",
     "vite": "^6.2.1",
-    "vite-plugin-dts": "^4.5.3"
+    "vite-plugin-dts": "^4.5.3",
+    "release-it": "^17.2.1"
   },
   "repository": {
     "type": "git",
