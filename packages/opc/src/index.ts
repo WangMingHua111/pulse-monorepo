@@ -39,7 +39,7 @@ type OpenPeerChannelOptions = {
   /**
    * 显示日志
    */
-  log?: boolean
+  debug?: boolean
 }
 class OpenPeerChannel implements IChannel {
   private isDestroy = false
@@ -56,7 +56,7 @@ class OpenPeerChannel implements IChannel {
   private readonly context: Record<string, symbol> = {}
   private readonly channel: BroadcastChannel
   private readonly state: Required<OpenPeerChannelOptions> = {
-    log: false,
+    debug: false,
   }
 
   constructor(name: string = 'open-peer-channel', options?: OpenPeerChannelOptions) {
@@ -122,7 +122,7 @@ class OpenPeerChannel implements IChannel {
     this._send(
       {
         no: this.no++,
-        type: PacketDataTypeEnum.common & PacketDataTypeEnum.message,
+        type: PacketDataTypeEnum.common | PacketDataTypeEnum.message,
         data: {
           message: data,
           messagetype: type,
@@ -195,7 +195,7 @@ class OpenPeerChannel implements IChannel {
   }
 
   private async _onmessage(data: PacketData, source: MessageEventSource, rawPacket: Packet) {
-    if (this.state.log) {
+    if (this.state.debug) {
       console.log('onmessage>>>', data)
     }
 
@@ -219,18 +219,19 @@ class OpenPeerChannel implements IChannel {
       } catch (e: any) {
         error = e?.message || '未知错误'
       }
+
+      // 回复数据包
+      this._send(
+        {
+          no: data.no,
+          type: PacketDataTypeEnum.internal | PacketDataTypeEnum.reply,
+          data: result,
+          error,
+        },
+        false,
+        source
+      )
     }
-    // 回复数据包
-    this._send(
-      {
-        no: data.no,
-        type: PacketDataTypeEnum.internal | PacketDataTypeEnum.reply,
-        data: result,
-        error,
-      },
-      false,
-      source
-    )
   }
 
   /**
