@@ -1,6 +1,6 @@
 {
   "name": "@pulse-dev/opc",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "open peer channel 基于PostMessage的对象和方法的双向通讯库",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
