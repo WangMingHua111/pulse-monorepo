@@ -1,3 +1,8 @@
+/*
+ * 下一步是否添加异源通信的能力
+ * @Author: wangminghua
+ * @Date: 2025-03-12 14:44:40
+ */
 import { CancelFn, IChannel, Packet, PacketData, PacketDataTypeEnum } from './define'
 
 const version = 'v1.0'
