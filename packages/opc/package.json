@@ -16,6 +16,10 @@
       "require": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "vite build",
     "release": "npx release-it patch"

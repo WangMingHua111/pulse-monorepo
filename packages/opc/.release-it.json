@@ -7,9 +7,9 @@
   },
   "git": {
     "requireCleanWorkingDir": true,
-    "tagName": "opc:v${version}",
-    "commitMessage": "chore: release opc:v${version}",
-    "tagAnnotation": "Release opc:v${version}",
+    "tagName": "opc_v${version}",
+    "commitMessage": "chore: release opc_v${version}",
+    "tagAnnotation": "Release opc_v${version}",
     "push": true
   },
   "npm": {
