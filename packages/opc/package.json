@@ -2,12 +2,20 @@
   "name": "@pulse-dev/opc",
   "version": "0.2.1",
   "description": "open peer channel 基于PostMessage的对象和方法的双向通讯库",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "postMessage",
     "iframe",
     "channel"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "vite build",
     "release": "npx release-it patch"
@@ -15,8 +23,7 @@
   "devDependencies": {
     "typescript": "~5.7.2",
     "vite": "^6.2.1",
-    "vite-plugin-dts": "^4.5.3",
-    "release-it": "^17.2.1"
+    "vite-plugin-dts": "^4.5.3"
   },
   "repository": {
     "type": "git",
