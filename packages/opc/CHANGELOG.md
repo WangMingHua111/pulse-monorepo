@@ -1,5 +1,12 @@
 
 
+## [0.2.6](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.5...opc_v0.2.6) (2025-03-31)
+
+
+### Features
+
+* 添加跨域能力 ([bde4fed](https://github.com/WangMingHua111/pulse-monorepo/commit/bde4fedb5efde8bd6e11ca3f82086f4e8f11b4fd))
+
 ## [0.2.5](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.4...opc_v0.2.5) (2025-03-12)
 
 
