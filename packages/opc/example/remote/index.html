@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>远端页面</title>
+    <script src="http://localhost:6635/index.umd.js"></script>
+  </head>
+  <body>
+    <div>我是远端页面</div>
+    <script>
+      const { OpenPeerChannel } = opc
+
+      const channel = new OpenPeerChannel(undefined, { allowCors: true, debug: true })
+      console.log('channel2>>>', channel)
+
+      setTimeout(() => {
+        // debugger
+        channel.push('sa1d2sa1d')
+        channel.call(() => {
+          alert(1)
+        })
+        console.log('setTimeout>>>')
+      }, 5000)
+    </script>
+  </body>
+</html>

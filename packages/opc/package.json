@@ -16,7 +16,11 @@
   ],
   "scripts": {
     "build": "vite build",
-    "release": "npx release-it patch"
+    "release": "npx release-it patch",
+    "run-test-server": "run-p server-dist server-remote server-main",
+    "server-main": "http-server ./example/main --port 6633",
+    "server-remote": "http-server ./example/remote --port 6634",
+    "server-dist": "http-server ./dist --port 6635"
   },
   "devDependencies": {
     "typescript": "~5.7.2",

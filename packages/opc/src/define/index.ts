@@ -44,6 +44,12 @@ export interface IChannel {
    * @param listener 侦听器
    */
   off(type?: string, listener?: (data: any) => void): IChannel
+
+  /**
+   * 连接到远端，远端配置了allowCors时生效
+   * @param win iframe.contentWindow
+   */
+  connect(win: Window): Promise<boolean>
 }
 
 /**
@@ -78,6 +84,10 @@ export enum PacketDataTypeEnum {
    * 远程方法调用
    */
   call = 1 << 8,
+  /**
+   * 通道连接
+   */
+  connect = 1 << 9,
 }
 
 /**

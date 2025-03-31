@@ -45,6 +45,11 @@ type OpenPeerChannelOptions = {
    * 显示日志
    */
   debug?: boolean
+  /**
+   * 允许跨域通信
+   * @default false
+   */
+  allowCors?: boolean
 }
 class OpenPeerChannel implements IChannel {
   private isDestroy = false
@@ -59,49 +64,66 @@ class OpenPeerChannel implements IChannel {
   private readonly listeners = new Map<string, Set<(data: any) => void>>()
   private readonly hoisting = new Set<string>()
   private readonly context: Record<string, symbol> = {}
-  private readonly channel: BroadcastChannel
-  private readonly state: Required<OpenPeerChannelOptions> = {
+  private readonly channel: BroadcastChannel | MessageEventSource
+  private readonly state: OpenPeerChannelOptions = {
     debug: false,
+    allowCors: false
   }
 
   constructor(name: string = 'open-peer-channel', options?: OpenPeerChannelOptions) {
     Object.assign(this.state, options)
 
+    const allowCors = !!options?.allowCors
+    // 允许跨域访问
+    if (allowCors) {
+      // 跨域通道对象
+      const corsChannel = new BroadcastChannel(name)
+      let port: MessagePort | undefined
+      // 通过跨域通道转发消息
+      window.addEventListener('message', (e) => {
+        port = e.ports[0]
+        corsChannel.postMessage(e.data)
+      })
+
+      corsChannel.addEventListener('message', (e) => {
+        port?.postMessage(e.data)
+      })
+    }
+
     const channel = new BroadcastChannel(name)
 
-    channel.addEventListener(
-      'message',
-      (e: MessageEvent) => {
-        const t = e.data as Packet
-        if (!_assignable(t)) return
-
-        const playload = t.playload
-        const reply = !!(playload.type & PacketDataTypeEnum.reply)
-        if (reply) {
-          // 另一方回复的消息
-          const { resolve, reject } = this.calls.get(playload.no) || {}
-          this.calls.delete(playload.no) // 移除回调
-          if (playload.error) {
-            // 远程调用抛异常
-            reject && reject(playload.error)
-          } else {
-            // 远程调用成功
-            resolve && resolve(playload.data)
-          }
-        } else {
-          this._onmessage(t.playload, e.source as any, t)
-        }
-      },
-      {
-        passive: true,
-      }
-    )
+    const self = this
+    channel.addEventListener('message', this._messageFn.bind(self), { passive: true, })
 
     this.channel = channel
   }
+
+  async connect(contentWindow: Window): Promise<boolean> {
+    const channel = new MessageChannel();
+
+
+
+    this._send(
+      {
+        no: this.no++,
+        type: PacketDataTypeEnum.internal | PacketDataTypeEnum.connect,
+        data: '通道连接'
+      },
+      true,
+      contentWindow,
+      [channel.port2]
+    )
+    channel.port1.onmessage = (e) => {
+      this._messageFn(e)
+    }
+
+    return true
+  }
   destroy(): void {
     if (this.isDestroy) return
-    this.channel.close()
+    if (this.channel instanceof BroadcastChannel) {
+      this.channel.close()
+    }
     this.isDestroy = true
   }
 
@@ -176,25 +198,26 @@ class OpenPeerChannel implements IChannel {
    * 发送数据包
    * @param data 数据包数据
    */
-  private _send(data: PacketData, reply: false, source?: MessageEventSource): void
+  private _send(data: PacketData, reply: false, source?: MessageEventSource, transfer?: any[]): void
   /**
    * 发送数据包
    * @param data 数据包数据
    * @param reply 需要回复
    */
-  private _send(data: PacketData, reply: true, source?: MessageEventSource): Promise<any>
-  private _send(data: PacketData, reply: boolean, source?: MessageEventSource): void | Promise<any> {
+  private _send(data: PacketData, reply: true, source?: MessageEventSource, transfer?: any[]): Promise<any>
+  private _send(data: PacketData, reply: boolean, source?: MessageEventSource, transfer?: any[]): void | Promise<any> {
     const channel = source || this.channel
     const packet = _wrap(data)
     // 不需要回复的数据包，直接发送即可
     if (!reply) {
-      channel.postMessage(packet)
+      channel.postMessage(packet, { targetOrigin: '*', transfer })
     } else {
       // 需要回复的数据包
       return new Promise((resolve, reject) => {
         // 添加消息处理回调
         this.calls.set(data.no, { resolve, reject })
-        channel.postMessage(packet)
+
+        channel.postMessage(packet, { targetOrigin: '*', transfer })
       })
     }
   }
@@ -206,6 +229,21 @@ class OpenPeerChannel implements IChannel {
 
     let result: any
     let error: any
+
+    // 处理连接
+    if (data.type & PacketDataTypeEnum.internal && data.type & PacketDataTypeEnum.connect) {
+      result = '通道连接成功'
+      this._send({
+        no: data.no,
+        type: PacketDataTypeEnum.internal | PacketDataTypeEnum.reply,
+        data: result,
+        error,
+      },
+        false,
+        source
+      )
+    }
+
     // 处理消息
     if (data.type & PacketDataTypeEnum.common && data.type & PacketDataTypeEnum.message) {
       const { message, messagetype = '*' } = data.data || {}
@@ -239,6 +277,27 @@ class OpenPeerChannel implements IChannel {
     }
   }
 
+  private _messageFn(e: MessageEvent) {
+    const t = e.data as Packet
+    if (!_assignable(t)) return
+
+    const playload = t.playload
+    const reply = !!(playload.type & PacketDataTypeEnum.reply)
+    if (reply) {
+      // 另一方回复的消息
+      const { resolve, reject } = this.calls.get(playload.no) || {}
+      this.calls.delete(playload.no) // 移除回调
+      if (playload.error) {
+        // 远程调用抛异常
+        reject && reject(playload.error)
+      } else {
+        // 远程调用成功
+        resolve && resolve(playload.data)
+      }
+    } else {
+      this._onmessage(t.playload, e.source as any, t)
+    }
+  }
   /**
    * 通过虚拟机执行远程调用函数
    * @param param0

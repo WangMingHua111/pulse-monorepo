@@ -9,6 +9,7 @@ export default defineConfig({
       fileName: 'index',
       formats: ['es', 'cjs', 'umd'],
     },
+    minify: false, // 禁用代码压缩
   },
   plugins: [
     dts({
