@@ -25,6 +25,11 @@
         channel.message((d) => {
           console.log('message1>>>', d)
         })
+
+        setTimeout(() => {
+          console.log('哈哈哈 setTimeout>>>')
+          channel.push('哈哈哈')
+        }, 3000)
       }
     </script>
   </body>

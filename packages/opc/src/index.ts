@@ -78,7 +78,7 @@ class OpenPeerChannel implements IChannel {
   private readonly listeners = new Map<string, Set<(data: any) => void>>()
   private readonly hoisting = new Set<string>()
   private readonly context: Record<string, symbol> = {}
-  private readonly channel: BroadcastChannel | MessageEventSource
+  private channel: BroadcastChannel | MessageEventSource
   private readonly pid = _uuid()
   private readonly state: OpenPeerChannelOptions = {
     debug: false,
@@ -96,8 +96,9 @@ class OpenPeerChannel implements IChannel {
       let port: MessagePort | undefined
       // 通过跨域通道转发消息
       window.addEventListener('message', (e) => {
-        if (e.ports.length > 0 && typeof e.data === 'object' && e.data.playload?.data === '通道连接')
+        if (e.ports.length > 0 && typeof e.data === 'object' && e.data.playload?.data === '通道连接') {
           port = e.ports[0]
+        }
         corsChannel.postMessage(e.data)
       })
 
@@ -121,6 +122,7 @@ class OpenPeerChannel implements IChannel {
     channel.port1.onmessage = (e) => {
       this._messageFn(e)
     }
+
     debug && console.log('通道连接中...')
     const result = await this._send(
       {
@@ -134,6 +136,10 @@ class OpenPeerChannel implements IChannel {
     )
     debug && console.log(result)
 
+    if (this.channel instanceof BroadcastChannel) {
+      this.channel.close()
+    }
+    this.channel = contentWindow
 
     return true
   }

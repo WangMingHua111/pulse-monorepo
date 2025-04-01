@@ -14,14 +14,18 @@
       const channel = new OpenPeerChannel(undefined, { allowCors: true, debug: true })
       console.log('channel2>>>', channel)
 
-      setTimeout(() => {
-        // debugger
-        channel.push('sa1d2sa1d')
-        // channel.call(() => {
-        //   alert(1)
-        // })
-        console.log('setTimeout>>>')
-      }, 5000)
+      channel.message((d) => {
+        console.log('message2>>>', d)
+      })
+
+      // setTimeout(() => {
+      //   // debugger
+      //   channel.push('sa1d2sa1d')
+      //   // channel.call(() => {
+      //   //   alert(1)
+      //   // })
+      //   console.log('setTimeout>>>')
+      // }, 5000)
     </script>
   </body>
 </html>
