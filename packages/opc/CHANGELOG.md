@@ -1,5 +1,12 @@
 
 
+## [0.2.9](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.8...opc_v0.2.9) (2025-04-01)
+
+
+### Bug Fixes
+
+* 修复client端无法发送消息到跨域远端 ([eda544d](https://github.com/WangMingHua111/pulse-monorepo/commit/eda544d307f151902cea202577f406d5e1cfc22c))
+
 ## [0.2.8](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.7...opc_v0.2.8) (2025-04-01)
 
 
