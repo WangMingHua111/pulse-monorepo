@@ -1,5 +1,12 @@
 
 
+## [0.2.8](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.7...opc_v0.2.8) (2025-04-01)
+
+
+### Bug Fixes
+
+* 优化修复跨域远程调用 ([9290a93](https://github.com/WangMingHua111/pulse-monorepo/commit/9290a931c319338aa773daba3d2b5eb74876c6f4))
+
 ## [0.2.7](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.6...opc_v0.2.7) (2025-04-01)
 
 ## [0.2.6](https://github.com/WangMingHua111/pulse-monorepo/compare/opc_v0.2.5...opc_v0.2.6) (2025-03-31)
