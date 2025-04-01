@@ -14,15 +14,16 @@
       // const channel = new OpenPeerChannel('')
       // console.log('channel1>>>', channel)
 
-      function iframeLoaded() {
+      async function iframeLoaded() {
         console.log('iframe加载完毕')
         const { OpenPeerChannel } = opc
-        const channel = new OpenPeerChannel()
-
-        channel.connect(document.querySelector('#xx').contentWindow)
+        const channel = new OpenPeerChannel(undefined, { debug: true })
         console.log('channel1>>>', channel)
+        const result = await channel.connect(document.querySelector('#xx').contentWindow)
+        console.log('connect result>>>', result)
+
         channel.message((d) => {
-          console.log('message>>>', d)
+          console.log('message1>>>', d)
         })
       }
     </script>

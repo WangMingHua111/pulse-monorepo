@@ -96,7 +96,8 @@ class OpenPeerChannel implements IChannel {
       let port: MessagePort | undefined
       // 通过跨域通道转发消息
       window.addEventListener('message', (e) => {
-        port = e.ports[0]
+        if (e.ports.length > 0 && typeof e.data === 'object' && e.data.playload?.data === '通道连接')
+          port = e.ports[0]
         corsChannel.postMessage(e.data)
       })
 
@@ -114,9 +115,14 @@ class OpenPeerChannel implements IChannel {
   }
 
   async connect(contentWindow: Window): Promise<boolean> {
+    const debug = !!this.state.debug
     const channel = new MessageChannel();
 
-    this._send(
+    channel.port1.onmessage = (e) => {
+      this._messageFn(e)
+    }
+    debug && console.log('通道连接中...')
+    const result = await this._send(
       {
         no: this.no++,
         type: PacketDataTypeEnum.internal | PacketDataTypeEnum.connect,
@@ -126,17 +132,15 @@ class OpenPeerChannel implements IChannel {
       contentWindow,
       [channel.port2]
     )
-    channel.port1.onmessage = (e) => {
-      this._messageFn(e)
-    }
+    debug && console.log(result)
+
 
     return true
   }
   destroy(): void {
     if (this.isDestroy) return
-    if (this.channel instanceof BroadcastChannel) {
-      this.channel.close()
-    }
+    if (this.channel instanceof BroadcastChannel) this.channel.close() // 关闭通道
+    this.off() // 移除所有事件
     this.isDestroy = true
   }
 
