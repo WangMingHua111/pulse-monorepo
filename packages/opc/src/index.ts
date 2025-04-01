@@ -7,6 +7,19 @@ import { CancelFn, IChannel, Packet, PacketData, PacketDataTypeEnum } from './de
 
 const version = 'v1.0'
 
+function _uuid(withHyphens = true): string {
+  let uuidStr = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+
+  if (!withHyphens) {
+    uuidStr = uuidStr.replace(/-/g, '')
+  }
+  return uuidStr
+}
+
 function _hash(str: string, digit = 6, cipher = 'dHkfcJupR2ygGO0mX5xVBWZ31KvablITMst9D4C8hjEo7iwLqeS6YQUzNrFAPn') {
   const step = Math.floor(str.length / digit) || 1
   const offset = str.length % digit
@@ -21,9 +34,10 @@ function _sign(time: string, version: string) {
   return _hash(`${time}${version}`, 12)
 }
 
-function _wrap(playload: PacketData) {
+function _wrap(playload: PacketData, sender: string) {
   const time = new Date().toISOString()
   const packet: Packet = {
+    sender,
     time,
     version,
     playload,
@@ -65,6 +79,7 @@ class OpenPeerChannel implements IChannel {
   private readonly hoisting = new Set<string>()
   private readonly context: Record<string, symbol> = {}
   private readonly channel: BroadcastChannel | MessageEventSource
+  private readonly pid = _uuid()
   private readonly state: OpenPeerChannelOptions = {
     debug: false,
     allowCors: false
@@ -100,8 +115,6 @@ class OpenPeerChannel implements IChannel {
 
   async connect(contentWindow: Window): Promise<boolean> {
     const channel = new MessageChannel();
-
-
 
     this._send(
       {
@@ -207,7 +220,8 @@ class OpenPeerChannel implements IChannel {
   private _send(data: PacketData, reply: true, source?: MessageEventSource, transfer?: any[]): Promise<any>
   private _send(data: PacketData, reply: boolean, source?: MessageEventSource, transfer?: any[]): void | Promise<any> {
     const channel = source || this.channel
-    const packet = _wrap(data)
+    const sender = this.pid
+    const packet = _wrap(data, sender)
     // 不需要回复的数据包，直接发送即可
     if (!reply) {
       channel.postMessage(packet, { targetOrigin: '*', transfer })
@@ -223,10 +237,12 @@ class OpenPeerChannel implements IChannel {
   }
 
   private async _onmessage(data: PacketData, source: MessageEventSource, rawPacket: Packet) {
+    // 如果发送者是自己的情况下，忽略该消息
+    if (rawPacket.sender === this.pid) return
+
     if (this.state.debug) {
       console.log('onmessage>>>', data)
     }
-
     let result: any
     let error: any
 

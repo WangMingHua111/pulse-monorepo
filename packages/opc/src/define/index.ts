@@ -94,6 +94,10 @@ export enum PacketDataTypeEnum {
  * 数据包
  */
 export type Packet = {
+  /**
+   * 数据包发送者
+   */
+  readonly sender: string
   readonly playload: PacketData
   /**
    * 时间，ISO格式，示例：`2024-02-26T02:33:33.140Z`
