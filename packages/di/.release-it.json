@@ -4,15 +4,18 @@
       "preset": "angular",
       "infile": "CHANGELOG.md",
       "gitRawCommitsOpts": {
-        "path": "packages/opc"
+        "path": "."
+      },
+      "commitsOpts": {
+        "path": "."
       }
     }
   },
   "git": {
-    "requireCleanWorkingDir": true,
+    "requireCleanWorkingDir": false,
     "tagName": "di_v${version}",
-    "commitMessage": "chore: release di_v${version}",
     "tagAnnotation": "Release di_v${version}",
+    "commitMessage": "chore: release di_v${version}",
     "push": true
   },
   "npm": {
