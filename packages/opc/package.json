@@ -29,14 +29,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WangMingHua111/pulse-monorepo.git"
+    "url": "https://github.com/WangMingHua111/pulse-monorepo/tree/master/packages/opc"
   },
   "author": "wangminghua",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/WangMingHua111/pulse-monorepo/issues"
-  },
-  "homepage": "https://github.com/WangMingHua111/pulse-monorepo#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
