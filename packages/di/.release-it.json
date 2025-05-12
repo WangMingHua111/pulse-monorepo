@@ -1,0 +1,24 @@
+{
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  },
+  "git": {
+    "requireCleanWorkingDir": true,
+    "tagName": "di_v${version}",
+    "commitMessage": "chore: release di_v${version}",
+    "tagAnnotation": "Release di_v${version}",
+    "push": true
+  },
+  "npm": {
+    "publish": true,
+    "timeout": 30,
+    "skipChecks": true
+  },
+  "hooks": {
+    "after:git:release": "echo Successfully released ${version} to GitLab",
+    "after:release": "echo Successfully released ${version} to npm"
+  }
+}

@@ -1,0 +1,33 @@
+{
+    "name": "@pulse-dev/di",
+    "version": "0.0.5",
+    "description": "typescript dependency injection",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "vite build",
+        "release": "npx release-it patch"
+    },
+    "author": "wangminghua",
+    "license": "ISC",
+    "dependencies": {
+        "reflect-metadata": "^0.1.13",
+        "typescript": "^5.2.2"
+    },
+    "devDependencies": {
+        "vite": "^6.2.1",
+        "vite-plugin-dts": "^4.5.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/WangMingHua111/di.git"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
+    "engines": {
+        "node": ">=16"
+    }
+}
