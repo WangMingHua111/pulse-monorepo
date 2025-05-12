@@ -21,7 +21,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/WangMingHua111/di.git"
+        "url": "https://github.com/WangMingHua111/pulse-monorepo/tree/master/packages/di"
     },
     "publishConfig": {
         "access": "public",
